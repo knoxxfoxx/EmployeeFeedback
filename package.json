@@ -1,0 +1,12 @@
+{
+  "name": "feedback-loop",
+  "version": "1.0.0",
+  "description": "Employee Feedback System",
+  "private": true,
+  "scripts": {
+    "dev:client": "npm run dev --prefix client",
+    "dev:api": "npm run dev --prefix api",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd client && npm install && cd ../api && npm install"
+  }
+}

@@ -1,0 +1,11 @@
+node_modules
+dist
+.env
+.env.local
+.vercel
+*.log
+.DS_Store
+client/node_modules
+client/dist
+api/node_modules
+uploads/
