@@ -30,6 +30,14 @@ function LandingPage({ onAuthenticated }) {
         {/* Hero Section */}
         <div className="text-center mb-12 animate-fade-in">
           <div className="mb-8">
+            {/* DeRoyal Logo */}
+            <div className="mb-6 flex justify-center">
+              <img 
+                src="/assets/deroyal-logo-blue.png" 
+                alt="DeRoyal" 
+                className="h-16 md:h-20 object-contain"
+              />
+            </div>
             <h1 className="text-6xl font-bold text-deroyal-blue mb-4">
               Your Voice Matters
             </h1>

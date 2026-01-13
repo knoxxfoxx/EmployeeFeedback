@@ -161,8 +161,16 @@ function FeedbackForm({ onSubmitSuccess }) {
       <div className="max-w-4xl mx-auto">
         {/* Header with DeRoyal Branding */}
         <div className="bg-gradient-to-r from-deroyal-blue to-deroyal-light text-white rounded-t-2xl p-8 shadow-lg">
-          <h1 className="text-4xl font-bold mb-2">DeRoyal</h1>
-          <p className="text-xl">Employee Feedback System</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <img 
+                src="/assets/deroyal-logo.png" 
+                alt="DeRoyal" 
+                className="h-12 md:h-14 mb-3 object-contain brightness-0 invert"
+              />
+              <p className="text-xl">Employee Feedback System</p>
+            </div>
+          </div>
         </div>
 
         {/* Form Card */}
