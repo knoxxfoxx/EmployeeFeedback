@@ -1,21 +1,11 @@
 {
-  "version": 2,
   "buildCommand": "cd client && npm install && npm run build",
   "outputDirectory": "client/dist",
-  "functions": {
-    "api/*.js": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  },
+  "installCommand": "npm install --prefix client && npm install --prefix api",
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "/api/index.js"
-    },
-    {
-      "source": "/admin/:path*",
-      "destination": "/index.html"
+      "destination": "/api/index"
     },
     {
       "source": "/(.*)",
