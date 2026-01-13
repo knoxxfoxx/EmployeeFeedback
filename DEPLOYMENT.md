@@ -4,8 +4,9 @@
 
 ### 1. Prerequisites
 - Vercel account ([Sign up free](https://vercel.com/signup))
+- InstantDB account with App ID and Admin Token ([Sign up free](https://instantdb.com))
 - Google reCAPTCHA keys ([Get keys](https://www.google.com/recaptcha/admin))
-- Email account with SMTP access
+- Email account with SMTP access (for magic code authentication)
 
 ### 2. Deploy to Vercel
 
@@ -40,6 +41,7 @@ vercel
 
 In your Vercel project dashboard, go to **Settings** → **Environment Variables** and add:
 
+**Backend Variables (for serverless functions):**
 ```
 PASSPHRASE=your-secret-passphrase-here
 RECAPTCHA_SECRET_KEY=your-google-recaptcha-secret-key
@@ -48,12 +50,20 @@ EMAIL_PORT=587
 EMAIL_USER=your-email@deroyal.com
 EMAIL_PASSWORD=your-email-app-password
 EMAIL_TO=bparish@deroyal.com
+INSTANT_APP_ID=your-instantdb-app-id
+INSTANT_ADMIN_TOKEN=your-instantdb-admin-token
+```
+
+**Frontend Variables (for Vite build - must start with VITE_):**
+```
 VITE_RECAPTCHA_SITE_KEY=your-google-recaptcha-site-key
+VITE_INSTANT_APP_ID=your-instantdb-app-id
 ```
 
 **Important**: 
 - Set all variables for **Production**, **Preview**, and **Development** environments
-- The `VITE_RECAPTCHA_SITE_KEY` is needed for the frontend build
+- Frontend variables (VITE_*) are needed for the build process
+- Get your InstantDB credentials from https://instantdb.com/dash
 
 ### 4. Update reCAPTCHA Domain
 
