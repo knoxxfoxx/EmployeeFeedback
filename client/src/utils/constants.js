@@ -21,5 +21,3 @@ export const ALLOWED_FILE_EXTENSIONS = [
   '.png',
   '.gif'
 ]
-
-export const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'

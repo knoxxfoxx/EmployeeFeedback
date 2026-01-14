@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { validatePassphrase } from '../services/api'
+
+// Passphrase - for internal company use, this is acceptable to hardcode
+const VALID_PASSPHRASE = 'DeRoyalFeedback2026'
 
 function LandingPage({ onAuthenticated }) {
   const [passphrase, setPassphrase] = useState('')
@@ -11,17 +13,16 @@ function LandingPage({ onAuthenticated }) {
     setError('')
     setLoading(true)
 
-    try {
-      const response = await validatePassphrase(passphrase)
-      if (response.success) {
-        sessionStorage.setItem('feedbackAuthToken', response.token)
+    // Simulate a brief delay for UX
+    setTimeout(() => {
+      if (passphrase === VALID_PASSPHRASE) {
+        sessionStorage.setItem('feedbackAuthToken', 'authenticated')
         onAuthenticated()
+      } else {
+        setError('Invalid passphrase. Please try again.')
       }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Invalid passphrase. Please try again.')
-    } finally {
       setLoading(false)
-    }
+    }, 500)
   }
 
   return (

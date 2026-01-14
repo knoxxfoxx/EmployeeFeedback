@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import ReCAPTCHA from 'react-google-recaptcha'
-import { submitFeedback } from '../services/api'
-import { FEEDBACK_TYPES, MAX_DESCRIPTION_LENGTH, MAX_FILE_SIZE, RECAPTCHA_SITE_KEY } from '../utils/constants'
+import { tx, id } from '@instantdb/react'
+import db from '../lib/instant'
+import { FEEDBACK_TYPES, MAX_DESCRIPTION_LENGTH, MAX_FILE_SIZE } from '../utils/constants'
 import { validateFileType, formatFileSize } from '../utils/validation'
 
 function FeedbackForm({ onSubmitSuccess }) {
@@ -18,12 +18,10 @@ function FeedbackForm({ onSubmitSuccess }) {
     honeypot: '' // Hidden field for bot detection
   })
   const [attachment, setAttachment] = useState(null)
-  const [captchaToken, setCaptchaToken] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [descriptionLength, setDescriptionLength] = useState(0)
   
-  const recaptchaRef = useRef(null)
   const fileInputRef = useRef(null)
 
   const modules = {
@@ -83,11 +81,6 @@ function FeedbackForm({ onSubmitSuccess }) {
     }
   }
 
-  const handleCaptchaChange = (token) => {
-    setCaptchaToken(token)
-    setError('')
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
@@ -108,11 +101,6 @@ function FeedbackForm({ onSubmitSuccess }) {
       return
     }
 
-    if (!captchaToken) {
-      setError('Please complete the CAPTCHA verification')
-      return
-    }
-
     // Check honeypot
     if (formData.honeypot) {
       setError('Invalid submission')
@@ -122,35 +110,38 @@ function FeedbackForm({ onSubmitSuccess }) {
     setLoading(true)
 
     try {
-      const submitData = new FormData()
-      submitData.append('type', formData.type)
-      submitData.append('description', formData.description)
-      submitData.append('isAnonymous', formData.isAnonymous)
-      submitData.append('honeypot', formData.honeypot)
-      submitData.append('captchaToken', captchaToken)
+      const now = Date.now()
+      const feedbackId = id()
       
-      if (!formData.isAnonymous) {
-        submitData.append('email', formData.email)
-        if (formData.name) submitData.append('name', formData.name)
-        if (formData.title) submitData.append('title', formData.title)
-        if (formData.location) submitData.append('location', formData.location)
+      // Create feedback object
+      const feedback = {
+        id: feedbackId,
+        type: formData.type,
+        description: formData.description,
+        isAnonymous: formData.isAnonymous,
+        email: formData.email || null,
+        name: formData.name || null,
+        title: formData.title || null,
+        location: formData.location || null,
+        attachmentUrl: null, // Note: File uploads would need a separate service (e.g., Cloudinary)
+        attachmentName: attachment?.name || null,
+        status: 'new',
+        adminNotes: null,
+        createdAt: now,
+        updatedAt: now,
+        archivedAt: null,
+        archivedBy: null
       }
 
-      if (attachment) {
-        submitData.append('attachment', attachment)
-      }
+      // Save directly to InstantDB
+      await db.transact([
+        tx.feedback[feedbackId].update(feedback)
+      ])
 
-      const response = await submitFeedback(submitData)
-      
-      if (response.success) {
-        onSubmitSuccess()
-      }
+      onSubmitSuccess()
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to submit feedback. Please try again.')
-      if (recaptchaRef.current) {
-        recaptchaRef.current.reset()
-      }
-      setCaptchaToken(null)
+      console.error('Error submitting feedback:', err)
+      setError('Failed to submit feedback. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -367,15 +358,6 @@ function FeedbackForm({ onSubmitSuccess }) {
               autoComplete="off"
             />
 
-            {/* CAPTCHA */}
-            <div className="flex justify-center">
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={RECAPTCHA_SITE_KEY}
-                onChange={handleCaptchaChange}
-              />
-            </div>
-
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
@@ -397,7 +379,7 @@ function FeedbackForm({ onSubmitSuccess }) {
               </button>
               <button
                 type="submit"
-                disabled={loading || !captchaToken}
+                disabled={loading}
                 className="px-8 py-3 bg-gradient-to-r from-deroyal-blue to-deroyal-light text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {loading ? (
