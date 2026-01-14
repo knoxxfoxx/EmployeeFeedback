@@ -1,7 +1,22 @@
 // Admin authentication utilities
 
+// Whitelist of authorized admin email addresses
+const AUTHORIZED_ADMIN_EMAILS = [
+  'lbutler@deroyal.com',
+  'mcatron@deroyal.com',
+  'rharmon@deroyal.com',
+  'asewell@deroyal.com',
+  'bcdebusk@deroyal.com',
+  'cshulze@deroyal.com',
+  'bparish@deroyal.com',
+  'tknisley@deroyal.com',
+  'mkilby@deroyal.com'
+]
+
 export function isValidDeRoyalEmail(email) {
-  return email && email.toLowerCase().endsWith('@deroyal.com')
+  if (!email) return false
+  const normalizedEmail = email.toLowerCase().trim()
+  return AUTHORIZED_ADMIN_EMAILS.includes(normalizedEmail)
 }
 
 export function getStoredAuth() {

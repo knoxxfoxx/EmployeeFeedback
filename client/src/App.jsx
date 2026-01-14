@@ -33,9 +33,9 @@ function EmployeeFlow() {
   }
 
   const handleReset = () => {
+    // Only reset the submission state, keep the authentication
+    // This allows users to submit more feedback without re-entering the passphrase
     setIsSubmitted(false)
-    setIsAuthenticated(false)
-    sessionStorage.removeItem('feedbackAuthToken')
   }
 
   if (isSubmitted) {

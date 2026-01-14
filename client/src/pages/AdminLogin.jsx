@@ -13,9 +13,9 @@ function AdminLogin({ onLoginSuccess }) {
     e.preventDefault()
     setError('')
 
-    // Validate email domain
+    // Validate email is in authorized list
     if (!isValidDeRoyalEmail(email)) {
-      setError('Only @deroyal.com email addresses are allowed')
+      setError('Access denied. Only authorized DeRoyal email addresses are allowed.')
       return
     }
 
@@ -91,7 +91,7 @@ function AdminLogin({ onLoginSuccess }) {
                   autoFocus
                 />
                 <p className="mt-2 text-sm text-gray-500">
-                  Only @deroyal.com email addresses are allowed
+                  Access restricted to authorized administrators only
                 </p>
               </div>
 

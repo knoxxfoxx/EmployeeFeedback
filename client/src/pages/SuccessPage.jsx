@@ -3,6 +3,15 @@ function SuccessPage({ onReset }) {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
         <div className="bg-white rounded-2xl shadow-2xl p-12 text-center">
+          {/* DeRoyal Logo */}
+          <div className="mb-8 flex justify-center">
+            <img 
+              src="/assets/deroyal-logo-blue.png" 
+              alt="DeRoyal" 
+              className="h-14 md:h-16 object-contain"
+            />
+          </div>
+
           {/* Success Icon */}
           <div className="flex justify-center mb-6">
             <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center">
@@ -34,7 +43,7 @@ function SuccessPage({ onReset }) {
               onClick={onReset}
               className="w-full bg-gradient-to-r from-deroyal-blue to-deroyal-light text-white py-3 px-6 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition duration-200"
             >
-              Submit Another Feedback
+              Submit More Feedback
             </button>
             
             <button
